@@ -12,8 +12,8 @@ A web-based pet adoption platform developed for the CSE370 Database Management p
 - Activity logs
 - User roles: Adopter, Volunteer, Admin
 
-## ERR Diagram
-![ERR Diagram](docs/images/er-diagram.png)
+## EER Diagram
+![EER Diagram](docs/images/er-diagram.png)
 
 ## Tech Stack
 - Django
