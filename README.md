@@ -1,6 +1,6 @@
 # Pet Adoption Management System
 
-A web-based Pet Adoption platform developed as part of the CSE370 Database  Management System project.
+A web-based Pet Adoption Management System developed as part of the CSE370 Database  Management System project. The platform is designed to streamline the pet adoption process by connecting animal shelters, volunteers and potential adopters through a database driven system.
 
 ## Features
 - Pet profile management
