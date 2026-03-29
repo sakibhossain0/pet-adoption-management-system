@@ -26,7 +26,7 @@ Editable version:
 [Open Draw.io File](docs/diagrams/er-diagram.drawio)
 
 ## SCHEMA Diagram
-![SCHEMA Diagram](docs/images/schema diagram.drawio.png)
+![SCHEMA Diagram](docs/images/schema-diagram.drawio.png)
 
 ## Tech Stack
 - Django
