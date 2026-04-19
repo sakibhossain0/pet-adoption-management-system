@@ -29,7 +29,7 @@ Editable version:
 ![SCHEMA Diagram](docs/images/schema-diagram.drawio.png)
 
 ## NORMALIZED SCHEMA Diagram
-![NORMALIZED SCHEMA Diagram](docs/images/normalized-schema1-diagram.drawio.png)
+![NORMALIZED SCHEMA Diagram](docs/images/normalized-schema-diagram.drawio.png)
 
 ## Tech Stack
 - Django
