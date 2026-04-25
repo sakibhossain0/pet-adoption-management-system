@@ -28,16 +28,13 @@ Editable version:
 ## SCHEMA Diagram
 ![SCHEMA Diagram](docs/images/schema-diagram.drawio.png)
 
-## NORMALIZED SCHEMA Diagram
-![NORMALIZED SCHEMA Diagram](docs/images/normalized-schema-diagram.drawio.png)
-
 ## Tech Stack
-- Django
+- Laravel
 - MySQL
 - React
 - Tailwind CSS
 
 ## Project Structure
-- `backend/` Django backend
+- `backend/` Laravel backend
 - `frontend/` React frontend
 - `docs/` diagrams and report files
