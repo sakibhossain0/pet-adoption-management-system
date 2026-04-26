@@ -1,4 +1,12 @@
-protected $table = 'pets';
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+
+class Pet extends Model
+{
+    protected $table = 'pets';
     protected $primaryKey = 'pet_id';
     public $timestamps = false;
 
@@ -13,3 +21,4 @@ protected $table = 'pets';
         'shid',
         'fid',
     ];
+}
