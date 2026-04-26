@@ -1,10 +1,15 @@
-<?php
+protected $table = 'pets';
+    protected $primaryKey = 'pet_id';
+    public $timestamps = false;
 
-namespace App\Models;
-
-use Illuminate\Database\Eloquent\Model;
-
-class Pet extends Model
-{
-    //
-}
+    protected $fillable = [
+        'name',
+        'age',
+        'gender',
+        'breed',
+        'temperament',
+        'adopt_status',
+        'species',
+        'shid',
+        'fid',
+    ];
