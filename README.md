@@ -1,1 +1,123 @@
-```markdown <div align="center"> # 🐾 Pet Adoption Management System ### A full-stack pet adoption platform built for the **CSE370 Database Management System** course project <p> A colorful and database-driven web application that helps connect <b>pets</b>, <b>shelters</b>, <b>volunteers</b>, and <b>adopters</b> in one organized system. </p> <br> ![Laravel](https://img.shields.io/badge/Backend-Laravel-red?style=for-the-badge&logo=laravel) ![React](https://img.shields.io/badge/Frontend-React-61DAFB?style=for-the-badge&logo=react&logoColor=black) ![Tailwind CSS](https://img.shields.io/badge/UI-Tailwind_CSS-38BDF8?style=for-the-badge&logo=tailwind-css&logoColor=white) ![MySQL](https://img.shields.io/badge/Database-MySQL-4479A1?style=for-the-badge&logo=mysql&logoColor=white) ![PHP](https://img.shields.io/badge/Language-PHP-777BB4?style=for-the-badge&logo=php&logoColor=white) ![Vite](https://img.shields.io/badge/Build-Vite-646CFF?style=for-the-badge&logo=vite&logoColor=white) <br><br> ## 🛠️ Languages & Tools ![PHP](https://img.shields.io/badge/PHP-777BB4?style=for-the-badge&logo=php&logoColor=white) ![Laravel](https://img.shields.io/badge/Laravel-FF2D20?style=for-the-badge&logo=laravel&logoColor=white) ![Node.js](https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white) ![MySQL](https://img.shields.io/badge/MySQL-4479A1?style=for-the-badge&logo=mysql&logoColor=white) ![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black) ![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38BDF8?style=for-the-badge&logo=tailwind-css&logoColor=white) ![Android](https://img.shields.io/badge/Android-3DDC84?style=for-the-badge&logo=android&logoColor=white) ![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white) ![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white) <br><br> <img src="https://skillicons.dev/icons?i=laravel,react,tailwind,mysql,php,vite,git,github" /> </div> --- ## 📌 Project Overview The **Pet Adoption Management System** is a web-based full-stack application developed for the **CSE370 Database Management System** course project. The main goal of this project is to simplify and organize the pet adoption process by building a centralized platform where **adopters**, **volunteers**, **administrators**, and **animal shelters** can interact efficiently through a structured database-driven system. This project focuses heavily on: - relational database design - ER modeling - schema transformation - normalization - primary and foreign key relationships - real CRUD operations connected with a full-stack application --- ## ✨ Main Features ### 👤 User Side - Create account and login - Browse available pets - Search and filter pets - View detailed pet profiles - View pet medical history - Submit adoption applications - Explore adoption success stories - Take a pet recommendation quiz ### 🛠️ Admin Side - Manage pet records - Manage shelters - Manage foster parents - Review adoption applications - Manage medical records - Track donations - Monitor activity logs --- ## 👥 User Roles The system supports multiple user roles with different responsibilities: - **Adopter** 🐶 Can browse pets, view profiles, submit adoption applications, read success stories, and use the recommendation quiz. - **Volunteer** 🤝 Can assist in shelter activities and support pet adoption operations. - **Administrator** 👑 Has full access to manage the system, including pets, shelters, foster parents, applications, medical records, donations, and logs. --- ## 🧩 Core Modules - Users - Shelters - Foster Parents - Pets - Medical Records - Applications - Adoptions - Success Stories - Donations - Quiz Questions - Quiz Responses - Activity Logs --- ## 🎨 Frontend Features The frontend is designed with a colorful, warm, and friendly UI to match the theme of pet adoption. ### Main Pages - **Home Page** - Hero section - Featured pets - How it works - Success story preview - **Browse Pets Page** - Search and filters - Dynamic pet cards - **Pet Profile Page** - Full pet details - Health records - Similar pets - **Adoption Application Page** - User-friendly form - **Pet Suggestion Quiz Page** - Interactive step-by-step quiz - **Success Stories Gallery** - Story cards and details - **Admin Dashboard** - Management panels and quick actions --- ## 🗄️ Database Design This project was developed with strong emphasis on proper database design. ### ER Diagram ![ER Diagram](docs/images/er-diagram.drawio.png) Editable version: [Open Draw.io File](docs/diagrams/er-diagram.drawio) --- ### Schema Diagram ![Schema Diagram](docs/images/schema-diagram.drawio.png) --- ### Normalized Schema Diagram ![Normalized Schema Diagram](docs/images/normalized-schema-diagram.drawio.png) --- ## 🏗️ Tech Stack ### Frontend - **React** - **Tailwind CSS** - **Vite** - **JavaScript** - **HTML5** - **CSS3** ### Backend - **Laravel** - **PHP** ### Database - **MySQL** ### Tools - **Git** - **GitHub** - **Draw.io** - **XAMPP** --- ## 📁 Project Structure ```bash pet-adoption-management-system/ │ ├── backend/ # Laravel backend API ├── frontend/ # React + Tailwind frontend ├── docs/ # Diagrams, documentation, and project report └── README.md ``` --- ## ⚙️ Installation & Setup ### 1️⃣ Clone the Repository ```bash git clone https://github.com/your-username/pet-adoption-management-system.git cd pet-adoption-management-system ``` --- ## 2️⃣ Backend Setup (Laravel) ```bash cd backend composer install cp .env.example .env php artisan key:generate php artisan serve ``` Update your `backend/.env` file: ```env APP_NAME="Pet Adoption Management System" APP_ENV=local APP_KEY=your_app_key_here APP_DEBUG=true APP_URL=http://127.0.0.1:8000 DB_CONNECTION=mysql DB_HOST=127.0.0.1 DB_PORT=3306 DB_DATABASE=pet_adoption_db DB_USERNAME=root DB_PASSWORD= SESSION_DRIVER=file QUEUE_CONNECTION=sync CACHE_STORE=file ``` Backend will run at: ```bash http://127.0.0.1:8000 ``` --- ## 3️⃣ Frontend Setup (React + Tailwind) ```bash cd frontend npm install npm run dev ``` Frontend will run at: ```bash http://localhost:5173 ``` --- ## 🔌 Sample API Endpoints The backend exposes REST API routes such as: - `/api/users` - `/api/shelters` - `/api/foster-parents` - `/api/pets` - `/api/medical-records` - `/api/applications` - `/api/adoptions` - `/api/success-stories` - `/api/donations` - `/api/quiz-questions` - `/api/quiz-responses` - `/api/activity-logs` --- ## 📚 Academic Focus This project was built mainly for academic learning and practical database implementation. It demonstrates: - Entity Relationship Modeling - Schema Design - Database Normalization - Relational Data Management - CRUD Operations - Full-stack integration with database systems --- ## 🚀 Future Improvements Possible future enhancements include: - authentication and authorization system - image upload for pets and stories - email notifications - advanced search and recommendation system - analytics dashboard - mobile responsiveness improvements - deployment to live hosting --- ## 📸 Screenshots > Add your project screenshots here later for a more attractive README. Example: ```markdown ## Screenshots ### Homepage ![Homepage](docs/images/homepage.png) ### Browse Pets ![Browse Pets](docs/images/browse-pets.png) ### Pet Details ![Pet Details](docs/images/pet-details.png) ### Admin Dashboard ![Admin Dashboard](docs/images/admin-dashboard.png) ``` --- ## 💡 Why This Project Matters Pet adoption systems often rely on manual paperwork or scattered digital records. This project demonstrates how a properly designed database-backed web application can make the adoption process more organized, efficient, and user-friendly. It also shows how database concepts from the classroom can be applied to solve a meaningful real-world problem. --- ## 👨‍💻 Authors Developed as part of the **CSE370 Database Management System** course project. Add team member names here: - Sakib Hossain - Team Member 2 - Team Member 3 --- ## 📜 License This project is created for **academic and educational purposes only**. --- <div align="center"> ## 🐶 Adopt, Love, Repeat 🐱 Give every pet the loving home they deserve. </div>
+<div align="center">
+
+# 🐾 Pet Adoption Management System
+
+### CSE370 Database Management System Course Project
+
+A full-stack web application designed to make pet adoption easier by connecting **pets**, **shelters**, **adopters**, **volunteers**, and **administrators** through a database-driven platform.
+
+![Laravel](https://img.shields.io/badge/Backend-Laravel-red?style=for-the-badge&logo=laravel)
+![React](https://img.shields.io/badge/Frontend-React-61DAFB?style=for-the-badge&logo=react&logoColor=black)
+![MySQL](https://img.shields.io/badge/Database-MySQL-4479A1?style=for-the-badge&logo=mysql&logoColor=white)
+![Tailwind CSS](https://img.shields.io/badge/UI-Tailwind_CSS-38BDF8?style=for-the-badge&logo=tailwind-css&logoColor=white)
+
+</div>
+
+---
+
+## 📌 Overview
+
+The **Pet Adoption Management System** is a full-stack web application built for managing pet adoption activities. It helps users browse pets, submit adoption applications, view medical records, and explore success stories. Admins can manage pets, shelters, applications, donations, and activity logs.
+
+---
+
+## ✨ Features
+
+### User Features
+
+- Browse and search pets
+- View pet profiles and medical history
+- Submit adoption applications
+- Read adoption success stories
+- Take a pet recommendation quiz
+
+### Admin Features
+
+- Manage pets, shelters, and foster parents
+- Review adoption applications
+- Manage medical records
+- Track donations
+- Monitor activity logs
+
+---
+
+## 👥 User Roles
+
+- **Adopter**: Browses pets and applies for adoption
+- **Volunteer**: Supports shelter and adoption activities
+- **Administrator**: Manages the entire system
+
+---
+
+## 🧩 Core Modules
+
+- Users
+- Shelters
+- Foster Parents
+- Pets
+- Medical Records
+- Applications
+- Adoptions
+- Donations
+- Success Stories
+- Quiz Responses
+- Activity Logs
+
+---
+
+## 🗄️ Database Design
+
+This project focuses on:
+
+- ER modeling
+- Relational schema design
+- Normalization
+- Primary and foreign key relationships
+- CRUD operations
+
+### ER Diagram
+
+![ER Diagram](docs/images/er-diagram.drawio.png)
+
+### Schema Diagram
+
+![Schema Diagram](docs/images/schema-diagram.drawio.png)
+
+---
+
+## 🏗️ Tech Stack
+
+### Frontend
+
+- React
+- Tailwind CSS
+- Vite
+- JavaScript
+
+### Backend
+
+- Laravel
+- PHP
+
+### Database
+
+- MySQL
+
+### Tools
+
+- Git
+- GitHub
+- Draw.io
+- XAMPP
+
+---
+
+## 📁 Project Structure
+
+```bash
+pet-adoption-management-system/
+│
+├── backend/
+├── frontend/
+├── docs/
+└── README.md
