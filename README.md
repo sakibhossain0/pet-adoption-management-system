@@ -83,6 +83,10 @@ This project focuses on:
 
 ![Schema Diagram](docs/images/schema-diagram.drawio.png)
 
+### NORMALIZED Schema Diagram
+
+![Normalized Schema Diagram](docs/images/normalized-schema-diagram.drawio.png)
+
 ---
 
 ## 🏗️ Tech Stack
