@@ -7,102 +7,87 @@ use Illuminate\Http\Request;
 
 class DonationController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+   public function index()
     {
-         $successStories = SuccessStory::all();
-        return response()->json($successStories, 200);
+        $donations = Donation::all();
+        return response()->json($donations, 200);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
         $request->validate([
-            'title' => 'required|string|max:150',
-            'story_text' => 'required|string',
-            'photo_url' => 'nullable|string|max:255',
-            'date' => 'nullable|date',
-            'adoption_id' => 'required|integer|exists:adoptions,adoption_id|unique:success_stories,adoption_id',
+            'status' => 'required|string|max:30',
+            'date' => 'required|date',
+            'amount' => 'required|numeric|gt:0',
+            'uid' => 'required|integer|exists:users,uid',
+            'shid' => 'required|integer|exists:shelters,shid',
         ]);
 
-        $successStory = SuccessStory::create([
-            'title' => $request->title,
-            'story_text' => $request->story_text,
-            'photo_url' => $request->photo_url,
+        $donation = Donation::create([
+            'status' => $request->status,
             'date' => $request->date,
-            'adoption_id' => $request->adoption_id,
+            'amount' => $request->amount,
+            'uid' => $request->uid,
+            'shid' => $request->shid,
         ]);
 
         return response()->json([
-            'message' => 'Success story created successfully',
-            'data' => $successStory
+            'message' => 'Donation created successfully',
+            'data' => $donation
         ], 201);
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(string $id)
     {
-        $successStory = SuccessStory::find($id);
+        $donation = Donation::find($id);
 
-        if (!$successStory) {
-            return response()->json(['message' => 'Success story not found'], 404);
+        if (!$donation) {
+            return response()->json(['message' => 'Donation not found'], 404);
         }
 
-        return response()->json($successStory, 200);
+        return response()->json($donation, 200);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, string $id)
     {
-        $successStory = SuccessStory::find($id);
+        $donation = Donation::find($id);
 
-        if (!$successStory) {
-            return response()->json(['message' => 'Success story not found'], 404);
+        if (!$donation) {
+            return response()->json(['message' => 'Donation not found'], 404);
         }
 
         $request->validate([
-            'title' => 'required|string|max:150',
-            'story_text' => 'required|string',
-            'photo_url' => 'nullable|string|max:255',
-            'date' => 'nullable|date',
-            'adoption_id' => 'required|integer|exists:adoptions,adoption_id|unique:success_stories,adoption_id,' . $id . ',story_id',
+            'status' => 'required|string|max:30',
+            'date' => 'required|date',
+            'amount' => 'required|numeric|gt:0',
+            'uid' => 'required|integer|exists:users,uid',
+            'shid' => 'required|integer|exists:shelters,shid',
         ]);
 
-        $successStory->title = $request->title;
-        $successStory->story_text = $request->story_text;
-        $successStory->photo_url = $request->photo_url;
-        $successStory->date = $request->date;
-        $successStory->adoption_id = $request->adoption_id;
-        $successStory->save();
+        $donation->status = $request->status;
+        $donation->date = $request->date;
+        $donation->amount = $request->amount;
+        $donation->uid = $request->uid;
+        $donation->shid = $request->shid;
+        $donation->save();
 
         return response()->json([
-            'message' => 'Success story updated successfully',
-            'data' => $successStory
+            'message' => 'Donation updated successfully',
+            'data' => $donation
         ], 200);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(string $id)
     {
-        $successStory = SuccessStory::find($id);
+        $donation = Donation::find($id);
 
-        if (!$successStory) {
-            return response()->json(['message' => 'Success story not found'], 404);
+        if (!$donation) {
+            return response()->json(['message' => 'Donation not found'], 404);
         }
 
-        $successStory->delete();
+        $donation->delete();
 
-        return response()->json(['message' => 'Success story deleted successfully'], 200);
-    }
+        return response()->json(['message' => 'Donation deleted successfully'], 200);
+    
     }
 }
