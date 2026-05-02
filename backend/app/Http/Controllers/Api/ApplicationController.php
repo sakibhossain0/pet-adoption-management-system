@@ -10,29 +10,29 @@ class ApplicationController extends Controller
 {
     public function index()
     {
-        $applications = Application::all();
-        return response()->json($applications, 200);
+        return response()->json(Application::orderBy('app_id', 'desc')->get(), 200);
     }
 
     public function store(Request $request)
     {
-        $request->validate([
+        $data = $request->validate([
             'status' => 'required|string|max:30',
             'submission_date' => 'required|date',
             'uid' => 'required|integer|exists:users,uid',
             'pet_id' => 'required|integer|exists:pets,pet_id',
+            'applicant_name' => 'nullable|string|max:100',
+            'phone' => 'nullable|string|max:20',
+            'email' => 'nullable|email|max:150',
+            'housing_type' => 'nullable|string|max:80',
+            'other_pets' => 'nullable|string|max:80',
+            'daily_availability' => 'nullable|string|max:100',
         ]);
 
-        $application = Application::create([
-            'status' => $request->status,
-            'submission_date' => $request->submission_date,
-            'uid' => $request->uid,
-            'pet_id' => $request->pet_id,
-        ]);
+        $application = Application::create($data);
 
         return response()->json([
             'message' => 'Application created successfully',
-            'data' => $application
+            'data' => $application,
         ], 201);
     }
 
@@ -55,22 +55,24 @@ class ApplicationController extends Controller
             return response()->json(['message' => 'Application not found'], 404);
         }
 
-        $request->validate([
+        $data = $request->validate([
             'status' => 'required|string|max:30',
             'submission_date' => 'required|date',
             'uid' => 'required|integer|exists:users,uid',
             'pet_id' => 'required|integer|exists:pets,pet_id',
+            'applicant_name' => 'nullable|string|max:100',
+            'phone' => 'nullable|string|max:20',
+            'email' => 'nullable|email|max:150',
+            'housing_type' => 'nullable|string|max:80',
+            'other_pets' => 'nullable|string|max:80',
+            'daily_availability' => 'nullable|string|max:100',
         ]);
 
-        $application->status = $request->status;
-        $application->submission_date = $request->submission_date;
-        $application->uid = $request->uid;
-        $application->pet_id = $request->pet_id;
-        $application->save();
+        $application->update($data);
 
         return response()->json([
             'message' => 'Application updated successfully',
-            'data' => $application
+            'data' => $application,
         ], 200);
     }
 
@@ -87,5 +89,3 @@ class ApplicationController extends Controller
         return response()->json(['message' => 'Application deleted successfully'], 200);
     }
 }
-
- 

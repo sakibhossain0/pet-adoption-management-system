@@ -6,20 +6,16 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('quiz_questions', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
+            $table->id('qid');
+            $table->string('question_text', 500);
+            $table->unsignedBigInteger('uid')->nullable();
+            $table->foreign('uid')->references('uid')->on('users')->nullOnDelete();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('quiz_questions');

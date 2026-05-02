@@ -14,6 +14,7 @@ class MedicalRecord extends Model
         'treatment',
         'cost',
         'date',
+        'note',
         'pet_id',
     ];
 }

@@ -5,130 +5,113 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Pet;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class PetController extends Controller
 {
-    /**
-     * Show all pets
-     */
-    public function index()
+    private function savePhoto(Request $request, ?string $oldPath = null): ?string
     {
-        $pets = Pet::all();
+        if (!$request->hasFile('photo')) {
+            return $oldPath;
+        }
 
-        return response()->json($pets, 200);
+        if ($oldPath) {
+            Storage::disk('public')->delete(str_replace('/storage/', '', $oldPath));
+        }
+
+        return '/storage/' . $request->file('photo')->store('pets', 'public');
     }
 
-    /**
-     * Create a new pet
-     */
+    public function index()
+    {
+        return response()->json(Pet::orderBy('pet_id', 'desc')->get(), 200);
+    }
+
     public function store(Request $request)
     {
-        $request->validate([
+        $data = $request->validate([
             'name' => 'required|string|max:100',
             'age' => 'nullable|integer|min:0',
             'gender' => 'nullable|string|max:20',
             'breed' => 'nullable|string|max:80',
-            'temperament' => 'nullable|string|max:80',
+            'temperament' => 'nullable|string|max:120',
             'adopt_status' => 'required|string|max:30',
             'species' => 'required|string|max:50',
-            'shid' => 'required|integer|exists:shelters,shid',
+            'description' => 'nullable|string|max:2000',
+            'photo' => 'nullable|image|max:2048',
+            'shid' => 'nullable|integer|exists:shelters,shid',
             'fid' => 'nullable|integer|exists:foster_parents,fid',
         ]);
 
-        $pet = Pet::create([
-            'name' => $request->name,
-            'age' => $request->age,
-            'gender' => $request->gender,
-            'breed' => $request->breed,
-            'temperament' => $request->temperament,
-            'adopt_status' => $request->adopt_status,
-            'species' => $request->species,
-            'shid' => $request->shid,
-            'fid' => $request->fid,
-        ]);
+        $data['photo_url'] = $this->savePhoto($request);
+        unset($data['photo']);
+
+        $pet = Pet::create($data);
 
         return response()->json([
             'message' => 'Pet created successfully',
-            'data' => $pet
+            'data' => $pet,
         ], 201);
     }
 
-    /**
-     * Show one pet by pet_id
-     */
     public function show(string $id)
     {
         $pet = Pet::find($id);
 
         if (!$pet) {
-            return response()->json([
-                'message' => 'Pet not found'
-            ], 404);
+            return response()->json(['message' => 'Pet not found'], 404);
         }
 
         return response()->json($pet, 200);
     }
 
-    /**
-     * Update pet
-     */
     public function update(Request $request, string $id)
     {
         $pet = Pet::find($id);
 
         if (!$pet) {
-            return response()->json([
-                'message' => 'Pet not found'
-            ], 404);
+            return response()->json(['message' => 'Pet not found'], 404);
         }
 
-        $request->validate([
+        $data = $request->validate([
             'name' => 'required|string|max:100',
             'age' => 'nullable|integer|min:0',
             'gender' => 'nullable|string|max:20',
             'breed' => 'nullable|string|max:80',
-            'temperament' => 'nullable|string|max:80',
+            'temperament' => 'nullable|string|max:120',
             'adopt_status' => 'required|string|max:30',
             'species' => 'required|string|max:50',
-            'shid' => 'required|integer|exists:shelters,shid',
+            'description' => 'nullable|string|max:2000',
+            'photo' => 'nullable|image|max:2048',
+            'shid' => 'nullable|integer|exists:shelters,shid',
             'fid' => 'nullable|integer|exists:foster_parents,fid',
         ]);
 
-        $pet->name = $request->name;
-        $pet->age = $request->age;
-        $pet->gender = $request->gender;
-        $pet->breed = $request->breed;
-        $pet->temperament = $request->temperament;
-        $pet->adopt_status = $request->adopt_status;
-        $pet->species = $request->species;
-        $pet->shid = $request->shid;
-        $pet->fid = $request->fid;
+        $data['photo_url'] = $this->savePhoto($request, $pet->photo_url);
+        unset($data['photo']);
 
-        $pet->save();
+        $pet->update($data);
 
         return response()->json([
             'message' => 'Pet updated successfully',
-            'data' => $pet
+            'data' => $pet,
         ], 200);
     }
 
-    /**
-     * Delete pet
-     */
     public function destroy(string $id)
     {
         $pet = Pet::find($id);
 
         if (!$pet) {
-            return response()->json([
-                'message' => 'Pet not found'
-            ], 404);
+            return response()->json(['message' => 'Pet not found'], 404);
+        }
+
+        if ($pet->photo_url) {
+            Storage::disk('public')->delete(str_replace('/storage/', '', $pet->photo_url));
         }
 
         $pet->delete();
 
-        return response()->json([
-            'message' => 'Pet deleted successfully'
-        ], 200);
+        return response()->json(['message' => 'Pet deleted successfully'], 200);
     }
 }

@@ -35,7 +35,7 @@ export default function Footer() {
           <div className="space-y-4 text-white/80">
             <p className="flex items-start gap-3"><MapPin className="mt-1 h-5 w-5 text-brand-yellow" /> Dhanmondi, Dhaka, Bangladesh</p>
             <p className="flex items-center gap-3"><Phone className="h-5 w-5 text-brand-yellow" /> +880 1712 345 678</p>
-            <p className="flex items-center gap-3"><Mail className="h-5 w-5 text-brand-yellow" /> hello@pawfectmatch.demo</p>
+            <p className="flex items-center gap-3"><Mail className="h-5 w-5 text-brand-yellow" /> hello@pawfectmatch.com</p>
           </div>
         </div>
       </div>

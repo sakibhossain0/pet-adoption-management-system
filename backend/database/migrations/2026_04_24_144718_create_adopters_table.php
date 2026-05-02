@@ -6,20 +6,15 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('adopters', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
+            $table->id('adopter_id');
+            $table->unsignedBigInteger('uid')->unique();
+            $table->foreign('uid')->references('uid')->on('users')->cascadeOnDelete();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('adopters');

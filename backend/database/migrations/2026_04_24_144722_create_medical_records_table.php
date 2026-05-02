@@ -6,20 +6,19 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('medical_records', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
+            $table->id('mid');
+            $table->string('treatment');
+            $table->decimal('cost', 10, 2)->default(0);
+            $table->date('date');
+            $table->text('note')->nullable();
+            $table->unsignedBigInteger('pet_id');
+            $table->foreign('pet_id')->references('pet_id')->on('pets')->cascadeOnDelete();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('medical_records');

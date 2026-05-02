@@ -8,6 +8,29 @@ use Illuminate\Http\Request;
 
 class AdoptionController extends Controller
 {
+    public function myAdoptions(Request $request)
+    {
+        $user = $request->user();
+
+        $adoptions = Adoption::query()
+            ->join('applications', 'adoptions.app_id', '=', 'applications.app_id')
+            ->leftJoin('pets', 'applications.pet_id', '=', 'pets.pet_id')
+            ->where('applications.uid', $user->uid)
+            ->orderByDesc('adoptions.adoption_id')
+            ->get([
+                'adoptions.adoption_id',
+                'adoptions.adoption_date',
+                'adoptions.app_id',
+                'applications.pet_id',
+                'pets.name as pet_name',
+                'pets.species',
+                'pets.breed',
+                'pets.photo_url as pet_photo_url',
+            ]);
+
+        return response()->json($adoptions, 200);
+    }
+
     public function index()
     {
         $adoptions = Adoption::all();
@@ -79,4 +102,3 @@ class AdoptionController extends Controller
         return response()->json(['message' => 'Adoption deleted successfully'], 200);
     }
 }
-

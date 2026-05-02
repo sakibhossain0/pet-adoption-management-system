@@ -3,19 +3,19 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Donation;
 use Illuminate\Http\Request;
 
 class DonationController extends Controller
 {
-   public function index()
+    public function index()
     {
-        $donations = Donation::all();
-        return response()->json($donations, 200);
+        return response()->json(Donation::orderBy('did', 'desc')->get(), 200);
     }
 
     public function store(Request $request)
     {
-        $request->validate([
+        $data = $request->validate([
             'status' => 'required|string|max:30',
             'date' => 'required|date',
             'amount' => 'required|numeric|gt:0',
@@ -23,17 +23,11 @@ class DonationController extends Controller
             'shid' => 'required|integer|exists:shelters,shid',
         ]);
 
-        $donation = Donation::create([
-            'status' => $request->status,
-            'date' => $request->date,
-            'amount' => $request->amount,
-            'uid' => $request->uid,
-            'shid' => $request->shid,
-        ]);
+        $donation = Donation::create($data);
 
         return response()->json([
             'message' => 'Donation created successfully',
-            'data' => $donation
+            'data' => $donation,
         ], 201);
     }
 
@@ -56,7 +50,7 @@ class DonationController extends Controller
             return response()->json(['message' => 'Donation not found'], 404);
         }
 
-        $request->validate([
+        $data = $request->validate([
             'status' => 'required|string|max:30',
             'date' => 'required|date',
             'amount' => 'required|numeric|gt:0',
@@ -64,16 +58,11 @@ class DonationController extends Controller
             'shid' => 'required|integer|exists:shelters,shid',
         ]);
 
-        $donation->status = $request->status;
-        $donation->date = $request->date;
-        $donation->amount = $request->amount;
-        $donation->uid = $request->uid;
-        $donation->shid = $request->shid;
-        $donation->save();
+        $donation->update($data);
 
         return response()->json([
             'message' => 'Donation updated successfully',
-            'data' => $donation
+            'data' => $donation,
         ], 200);
     }
 
@@ -88,6 +77,5 @@ class DonationController extends Controller
         $donation->delete();
 
         return response()->json(['message' => 'Donation deleted successfully'], 200);
-    
     }
 }

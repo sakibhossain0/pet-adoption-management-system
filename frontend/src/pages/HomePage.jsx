@@ -1,11 +1,12 @@
 import { useEffect, useMemo, useState } from 'react';
 import { ArrowRight, ClipboardCheck, Home, PawPrint, Search } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import HeroBanner from '../components/HeroBanner';
 import SectionHeader from '../components/SectionHeader';
 import StatCard from '../components/StatCard';
 import PetCard from '../components/PetCard';
 import SuccessStoryCard from '../components/SuccessStoryCard';
-import { getPets, getSuccessStories } from '../services/contentService';
+import { getFosterParents, getPets, getShelters, getSuccessStories } from '../services/contentService';
 
 const steps = [
   {
@@ -28,23 +29,37 @@ const steps = [
 export default function HomePage() {
   const [pets, setPets] = useState([]);
   const [stories, setStories] = useState([]);
+  const [shelters, setShelters] = useState([]);
+  const [fosters, setFosters] = useState([]);
 
   useEffect(() => {
-    getPets().then(setPets);
-    getSuccessStories().then(setStories);
+    Promise.all([getPets(), getSuccessStories(), getShelters(), getFosterParents()])
+      .then(([petList, storyList, shelterList, fosterList]) => {
+        setPets(petList);
+        setStories(storyList);
+        setShelters(shelterList);
+        setFosters(fosterList);
+      })
+      .catch(() => {
+        setPets([]);
+        setStories([]);
+        setShelters([]);
+        setFosters([]);
+      });
   }, []);
 
   const featuredPets = useMemo(() => pets.slice(0, 4), [pets]);
+  const availablePets = useMemo(() => pets.filter((pet) => String(pet.adopt_status).toLowerCase() === 'available').length, [pets]);
 
   return (
     <div>
       <HeroBanner />
 
       <section className="section-shell mt-14 grid gap-6 sm:grid-cols-2 xl:grid-cols-4">
-        <StatCard label="Pets waiting for homes" value="124" accent="from-brand-pink to-brand-coral" />
-        <StatCard label="Successful adoptions" value="1,206" accent="from-brand-yellow to-brand-coral" />
-        <StatCard label="Partner shelters" value="18" accent="from-brand-blue to-brand-teal" />
-        <StatCard label="Happy foster homes" value="54" accent="from-brand-teal to-brand-pink" />
+        <StatCard label="Pets waiting for homes" value={pets.length} accent="from-brand-pink to-brand-coral" />
+        <StatCard label="Available pets" value={availablePets} accent="from-brand-yellow to-brand-coral" />
+        <StatCard label="Partner shelters" value={shelters.length} accent="from-brand-blue to-brand-teal" />
+        <StatCard label="Foster homes" value={fosters.length} accent="from-brand-teal to-brand-pink" />
       </section>
 
       <section className="section-shell mt-24">
@@ -54,14 +69,14 @@ export default function HomePage() {
             title="Say hello to pets ready for cuddles, zoomies, and second chances."
             description="Each profile includes personality details, health history, and a direct path to apply."
           />
-          <a href="/browse-pets" className="btn-secondary self-start lg:self-auto">
+          <Link to="/browse-pets" className="btn-secondary self-start lg:self-auto">
             See all pets <ArrowRight className="ml-2 h-4 w-4" />
-          </a>
+          </Link>
         </div>
         <div className="mt-10 grid gap-6 lg:grid-cols-4">
-          {featuredPets.map((pet) => (
-            <PetCard key={pet.pet_id} pet={pet} compact />
-          ))}
+          {featuredPets.length ? featuredPets.map((pet) => <PetCard key={pet.pet_id} pet={pet} compact />) : (
+            <p className="soft-card lg:col-span-4 text-center text-slate-500">No pets have been added yet.</p>
+          )}
         </div>
       </section>
 
@@ -96,16 +111,17 @@ export default function HomePage() {
           <SectionHeader
             eyebrow="Success stories"
             title="Little stories of courage, comfort, and happily-ever-afters."
-            description="A few heartwarming moments from families who found their perfect companion."
+            description="Heartwarming moments from families who found their perfect companion."
           />
-          <a href="/success-stories" className="hidden btn-secondary lg:inline-flex">
+          <Link to="/success-stories" className="hidden btn-secondary lg:inline-flex">
             Explore all stories
-          </a>
+          </Link>
         </div>
         <div className="mt-10 grid gap-6 lg:grid-cols-3">
           {stories.slice(0, 3).map((story) => (
             <SuccessStoryCard key={story.story_id} story={story} />
           ))}
+          {!stories.length ? <p className="soft-card lg:col-span-3 text-center text-slate-500">No success stories have been shared yet.</p> : null}
         </div>
       </section>
 
@@ -120,8 +136,8 @@ export default function HomePage() {
               Browse profiles, view health records, try the pet suggestion quiz, and move forward when the match feels right.
             </p>
             <div className="mt-8 flex flex-wrap gap-4">
-              <a href="/browse-pets" className="btn-primary !bg-white !text-brand-navy hover:!bg-rose-50">Browse pets</a>
-              <a href="/quiz" className="btn-secondary !border-white/20 !bg-white/10 !text-white hover:!bg-white/20">Take the quiz</a>
+              <Link to="/browse-pets" className="btn-primary !bg-white !text-brand-navy hover:!bg-rose-50">Browse pets</Link>
+              <Link to="/quiz" className="btn-secondary !border-white/20 !bg-white/10 !text-white hover:!bg-white/20">Take the quiz</Link>
             </div>
           </div>
         </div>

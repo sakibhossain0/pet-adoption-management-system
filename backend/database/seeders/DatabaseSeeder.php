@@ -5,21 +5,38 @@ namespace Database\Seeders;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
 {
     use WithoutModelEvents;
 
-    /**
-     * Seed the application's database.
-     */
     public function run(): void
     {
-        // User::factory(10)->create();
+        $emails = env('ADMIN_EMAILS', env('ADMIN_EMAIL', 'admin@pawfectmatch.com'));
+        $password = env('ADMIN_PASSWORD', 'admin12345');
 
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-        ]);
+        collect(explode(',', $emails))
+            ->map(fn ($email) => strtolower(trim($email)))
+            ->filter()
+            ->unique()
+            ->each(function (string $email) use ($password) {
+                User::updateOrCreate(
+                    ['email' => $email],
+                    [
+                        'name' => 'Pawfect Admin',
+                        'phone' => '01700000000',
+                        'password' => Hash::make($password),
+                        'photo_url' => null,
+                        'lifestyle_type' => null,
+                        'housing_type' => null,
+                        'skill_level' => null,
+                        'availability' => null,
+                        'access_code' => null,
+                        'admin_level' => 'SUPER_ADMIN',
+                        'user_type' => 'ADMIN',
+                    ]
+                );
+            });
     }
 }

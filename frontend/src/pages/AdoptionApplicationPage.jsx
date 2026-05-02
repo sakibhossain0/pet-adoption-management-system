@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import SectionHeader from '../components/SectionHeader';
 import { getPet, submitApplication } from '../services/contentService';
 import { useAuth } from '../contexts/AuthContext';
@@ -16,45 +16,83 @@ const initialState = {
 export default function AdoptionApplicationPage() {
   const { petId } = useParams();
   const navigate = useNavigate();
-  const { user } = useAuth();
+  const { user, isAuthenticated } = useAuth();
   const [pet, setPet] = useState(null);
   const [formData, setFormData] = useState(initialState);
   const [submitted, setSubmitted] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [error, setError] = useState('');
 
   useEffect(() => {
-    getPet(petId).then(setPet);
+    getPet(petId).then(setPet).catch(() => setPet(null));
   }, [petId]);
 
   useEffect(() => {
     if (user) {
       setFormData((current) => ({
         ...current,
-        name: user.name,
-        email: user.email,
+        name: user.name || '',
+        phone: user.phone || '',
+        email: user.email || '',
+        housingType: user.housing_type || '',
       }));
     }
   }, [user]);
 
   async function handleSubmit(event) {
     event.preventDefault();
+
+    if (!isAuthenticated) {
+      navigate('/login', { state: { from: `/apply/${petId}` } });
+      return;
+    }
+
     setSaving(true);
-    await submitApplication({
-      status: 'Pending',
-      submission_date: new Date().toISOString().slice(0, 10),
-      uid: 1,
-      pet_id: Number(petId),
-      profile: formData,
-    });
-    setSaving(false);
-    setSubmitted(true);
+    setError('');
+
+    try {
+      await submitApplication({
+        status: 'Pending',
+        submission_date: new Date().toISOString().slice(0, 10),
+        uid: user.uid,
+        pet_id: Number(petId),
+        applicant_name: formData.name,
+        phone: formData.phone,
+        email: formData.email,
+        housing_type: formData.housingType,
+        other_pets: formData.otherPets,
+        daily_availability: formData.dailyAvailability,
+      });
+      setSubmitted(true);
+    } catch (err) {
+      const errors = err.response?.data?.errors;
+      const firstError = errors ? Object.values(errors).flat()[0] : null;
+      setError(firstError || err.response?.data?.message || 'Could not submit application. Please try again.');
+    } finally {
+      setSaving(false);
+    }
   }
 
   if (!pet) {
     return (
       <div className="section-shell py-16">
         <div className="soft-card text-center">
-          <p className="text-slate-500">Loading application details…</p>
+          <p className="text-slate-500">Loading application details...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!isAuthenticated) {
+    return (
+      <div className="section-shell py-16">
+        <div className="soft-card text-center">
+          <h1 className="text-3xl font-black text-brand-navy">Login required</h1>
+          <p className="mt-3 text-slate-600">Please login or register before applying to adopt {pet.name}.</p>
+          <div className="mt-6 flex justify-center gap-3">
+            <Link to="/login" state={{ from: `/apply/${petId}` }} className="btn-primary">Login</Link>
+            <Link to="/register" className="btn-secondary">Register</Link>
+          </div>
         </div>
       </div>
     );
@@ -143,8 +181,10 @@ export default function AdoptionApplicationPage() {
             </div>
           </div>
 
-          <button type="submit" className="btn-primary w-full" disabled={saving}>
-            {saving ? 'Submitting…' : 'Submit Application'}
+          {error ? <div className="rounded-[28px] bg-red-50 p-5 text-red-600">{error}</div> : null}
+
+          <button type="submit" className="btn-primary w-full" disabled={saving || submitted}>
+            {saving ? 'Submitting...' : submitted ? 'Application Submitted' : 'Submit Application'}
           </button>
 
           {submitted ? (

@@ -1,27 +1,23 @@
 <?php
 
 use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
-        Schema::create('activity_logs', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
-        });
+        // Kept as a no-op because activity_logs is created in 2026_04_24_144723_create_activity_logs_table.php.
+        // This prevents duplicate table errors when running fresh migrations.
+        if (!Schema::hasTable('activity_logs')) {
+            Schema::create('activity_logs', function ($table) {
+                $table->id('log_id');
+            });
+        }
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
-        Schema::dropIfExists('activity_logs');
+        // No-op duplicate migration.
     }
 };

@@ -1,74 +1,136 @@
 import apiClient from './apiClient';
-import {
-  adminStatsFallback,
-  mockFosterParents,
-  mockMedicalRecords,
-  mockPets,
-  mockShelters,
-  mockSuccessStories,
-} from '../data/mockData';
+import { toPetView, toStoryView } from '../utils/media';
 
-function withFallback(request, fallback) {
-  return request
-    .then((response) => response.data)
-    .catch(() => fallback);
+function extractData(response) {
+  return response.data?.data ?? response.data;
 }
 
-export function getPets() {
-  return withFallback(apiClient.get('/pets'), mockPets);
+function asArray(value) {
+  return Array.isArray(value) ? value : [];
 }
 
-export function getPet(id) {
-  return getPets().then((pets) => pets.find((pet) => String(pet.pet_id) === String(id)) || null);
+export function formDataFromObject(payload) {
+  const formData = new FormData();
+  Object.entries(payload).forEach(([key, value]) => {
+    if (value === undefined || value === null || value === '') return;
+    formData.append(key, value);
+  });
+  return formData;
+}
+
+function hasFile(payload) {
+  return Object.values(payload || {}).some((value) => value instanceof File);
+}
+
+export async function listResource(path) {
+  const response = await apiClient.get(path);
+  return asArray(extractData(response));
+}
+
+export async function createResource(path, payload) {
+  const body = hasFile(payload) ? formDataFromObject(payload) : payload;
+  const response = await apiClient.post(path, body);
+  return extractData(response);
+}
+
+export async function updateResource(path, id, payload) {
+  const body = hasFile(payload) ? formDataFromObject({ ...payload, _method: 'PUT' }) : payload;
+  const response = hasFile(payload)
+    ? await apiClient.post(`${path}/${id}`, body)
+    : await apiClient.put(`${path}/${id}`, body);
+  return extractData(response);
+}
+
+export async function deleteResource(path, id) {
+  const response = await apiClient.delete(`${path}/${id}`);
+  return response.data;
+}
+
+export async function getPets() {
+  const pets = await listResource('/pets');
+  return pets.map(toPetView);
+}
+
+export async function getPet(id) {
+  const response = await apiClient.get(`/pets/${id}`);
+  return toPetView(extractData(response));
 }
 
 export function getShelters() {
-  return withFallback(apiClient.get('/shelters'), mockShelters);
+  return listResource('/shelters');
 }
 
 export function getFosterParents() {
-  return withFallback(apiClient.get('/foster-parents'), mockFosterParents);
+  return listResource('/foster-parents');
+}
+
+export function getUsers() {
+  return listResource('/users');
+}
+
+export function getApplications() {
+  return listResource('/applications');
+}
+
+export function getMyAdoptions() {
+  return listResource('/my-adoptions');
 }
 
 export function getMedicalRecords() {
-  return withFallback(apiClient.get('/medical-records'), mockMedicalRecords);
+  return listResource('/medical-records');
 }
 
-export function getMedicalRecordsByPetId(petId) {
-  return getMedicalRecords().then((records) => records.filter((record) => String(record.pet_id) === String(petId)));
+export function getActivityLogs() {
+  return listResource('/activity-logs');
 }
 
-export function getSuccessStories() {
-  return Promise.resolve(mockSuccessStories);
+export async function getMedicalRecordsByPetId(petId) {
+  const records = await getMedicalRecords();
+  return records.filter((record) => String(record.pet_id) === String(petId));
 }
 
-export function submitApplication(payload) {
-  return apiClient.post('/applications', payload).then((response) => response.data).catch(() => ({
-    message: 'Application saved locally for demo mode.',
-    data: payload,
-  }));
+export async function getSuccessStories() {
+  const stories = await listResource('/success-stories');
+  return stories.map(toStoryView);
+}
+
+export async function createSuccessStory(payload) {
+  const story = await createResource('/success-stories', payload);
+  return toStoryView(story);
+}
+
+export async function submitApplication(payload) {
+  return createResource('/applications', payload);
 }
 
 export async function getDashboardData() {
-  const [pets, shelters, fosterParents, medicalRecords] = await Promise.all([
+  const [pets, shelters, fosterParents, medicalRecords, users, applications, stories, activityLogs] = await Promise.all([
     getPets(),
     getShelters(),
     getFosterParents(),
     getMedicalRecords(),
+    getUsers(),
+    getApplications(),
+    getSuccessStories(),
+    getActivityLogs(),
   ]);
 
   const availablePets = pets.filter((pet) => String(pet.adopt_status).toLowerCase() === 'available').length;
 
   return {
     stats: [
-      { label: 'Total Pets', value: pets.length || adminStatsFallback[0].value },
-      { label: 'Available Pets', value: availablePets || adminStatsFallback[1].value },
-      { label: 'Shelters', value: shelters.length || 2 },
-      { label: 'Health Records', value: medicalRecords.length || 3 },
+      { label: 'Total Pets', value: pets.length },
+      { label: 'Available Pets', value: availablePets },
+      { label: 'Users', value: users.length },
+      { label: 'Applications', value: applications.length },
     ],
     pets,
     shelters,
     fosterParents,
     medicalRecords,
+    users,
+    applications,
+    stories,
+    activityLogs,
   };
 }

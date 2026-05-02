@@ -6,20 +6,16 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('adoptions', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
+            $table->id('adoption_id');
+            $table->date('adoption_date');
+            $table->unsignedBigInteger('app_id')->unique();
+            $table->foreign('app_id')->references('app_id')->on('applications')->cascadeOnDelete();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('adoptions');

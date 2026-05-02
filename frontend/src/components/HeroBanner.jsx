@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { HeartHandshake, Sparkles } from 'lucide-react';
+import heroImage from '../assets/hero.png';
 
 export default function HeroBanner() {
   return (
@@ -25,7 +26,7 @@ export default function HeroBanner() {
               Adopt a Pet
             </Link>
             <Link to="/success-stories" className="btn-secondary">
-              Learn More
+              Read Stories
             </Link>
           </div>
           <div className="mt-8 flex flex-wrap gap-6 text-sm font-semibold text-slate-600">
@@ -41,17 +42,17 @@ export default function HeroBanner() {
           transition={{ duration: 0.6, delay: 0.1 }}
         >
           <div className="absolute -left-6 top-8 hidden rounded-[28px] bg-white/90 px-5 py-4 shadow-xl md:block">
-            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">Happy adoptions</p>
-            <p className="mt-1 text-2xl font-black text-brand-navy">1,200+</p>
+            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">Admin managed</p>
+            <p className="mt-1 text-2xl font-black text-brand-navy">Live data</p>
           </div>
           <img
-            src="https://images.unsplash.com/photo-1516734212186-a967f81ad0d7?auto=format&fit=crop&w=1200&q=80"
+            src={heroImage}
             alt="Happy family with an adopted pet"
             className="h-[420px] w-full rounded-[34px] object-cover shadow-2xl ring-1 ring-white/80"
           />
           <div className="absolute -bottom-6 right-4 rounded-[28px] bg-white px-5 py-4 shadow-xl ring-1 ring-black/5">
-            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">New this week</p>
-            <p className="mt-1 text-lg font-black text-brand-navy">12 adorable profiles</p>
+            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">Photo uploads</p>
+            <p className="mt-1 text-lg font-black text-brand-navy">Pets, users, stories</p>
           </div>
         </motion.div>
       </div>

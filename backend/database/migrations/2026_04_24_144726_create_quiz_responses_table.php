@@ -6,20 +6,18 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('quiz_responses', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
+            $table->id('rid');
+            $table->string('answer', 500);
+            $table->unsignedBigInteger('uid');
+            $table->unsignedBigInteger('qid');
+            $table->foreign('uid')->references('uid')->on('users')->cascadeOnDelete();
+            $table->foreign('qid')->references('qid')->on('quiz_questions')->cascadeOnDelete();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('quiz_responses');

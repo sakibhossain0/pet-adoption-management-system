@@ -6,6 +6,7 @@ import PetProfilePage from './pages/PetProfilePage';
 import QuizPage from './pages/QuizPage';
 import SuccessStoriesPage from './pages/SuccessStoriesPage';
 import LoginPage from './pages/LoginPage';
+import RegisterPage from './pages/RegisterPage';
 import AdoptionApplicationPage from './pages/AdoptionApplicationPage';
 import AdminDashboardPage from './pages/AdminDashboardPage';
 import NotFoundPage from './pages/NotFoundPage';
@@ -20,6 +21,7 @@ function App() {
         <Route path="/quiz" element={<QuizPage />} />
         <Route path="/success-stories" element={<SuccessStoriesPage />} />
         <Route path="/login" element={<LoginPage />} />
+        <Route path="/register" element={<RegisterPage />} />
         <Route path="/apply/:petId" element={<AdoptionApplicationPage />} />
         <Route path="/dashboard" element={<AdminDashboardPage />} />
         <Route path="*" element={<NotFoundPage />} />

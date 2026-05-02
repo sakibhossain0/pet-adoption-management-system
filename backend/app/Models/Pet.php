@@ -18,6 +18,8 @@ class Pet extends Model
         'temperament',
         'adopt_status',
         'species',
+        'description',
+        'photo_url',
         'shid',
         'fid',
     ];
