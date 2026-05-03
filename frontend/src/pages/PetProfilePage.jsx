@@ -8,21 +8,24 @@ import PetCard from '../components/PetCard';
 export default function PetProfilePage() {
   const { id } = useParams();
   const [pet, setPet] = useState(null);
+  const [loading, setLoading] = useState(true);
   const [shelters, setShelters] = useState([]);
   const [fosterParents, setFosterParents] = useState([]);
   const [records, setRecords] = useState([]);
   const [allPets, setAllPets] = useState([]);
 
   useEffect(() => {
-    Promise.all([getPet(id), getShelters(), getFosterParents(), getMedicalRecordsByPetId(id), getPets()]).then(
-      ([petData, shelterData, fosterParentData, recordData, petList]) => {
+    setLoading(true);
+    Promise.all([getPet(id), getShelters(), getFosterParents(), getMedicalRecordsByPetId(id), getPets()])
+      .then(([petData, shelterData, fosterParentData, recordData, petList]) => {
         setPet(petData);
         setShelters(shelterData);
         setFosterParents(fosterParentData);
         setRecords(recordData);
         setAllPets(petList);
-      },
-    );
+      })
+      .catch(() => setPet(null))
+      .finally(() => setLoading(false));
   }, [id]);
 
   const shelter = useMemo(() => shelters.find((item) => String(item.shid) === String(pet?.shid)), [pet, shelters]);
@@ -34,6 +37,14 @@ export default function PetProfilePage() {
     () => allPets.filter((item) => item.pet_id !== pet?.pet_id && item.species === pet?.species).slice(0, 3),
     [allPets, pet],
   );
+
+  if (loading) {
+    return (
+      <div className="section-shell py-20">
+        <div className="soft-card text-center text-slate-500">Loading pet profile...</div>
+      </div>
+    );
+  }
 
   if (!pet) {
     return (
@@ -73,7 +84,13 @@ export default function PetProfilePage() {
             <Link to={`/apply/${pet.pet_id}`} className="btn-primary mt-8 w-full">
               Apply to Adopt
             </Link>
-          ) : null}
+          ) : (
+            <div className="mt-8 rounded-[28px] bg-slate-50 p-5 text-center font-semibold text-slate-600">
+              {String(pet.adopt_status).toLowerCase() === 'adopted'
+                ? 'This pet has already been adopted.'
+                : 'Applications are not open for this pet right now.'}
+            </div>
+          )}
         </div>
       </div>
 

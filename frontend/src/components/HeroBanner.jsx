@@ -1,7 +1,8 @@
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { HeartHandshake, Sparkles } from 'lucide-react';
-import heroImage from '../assets/hero.png';
+
+const heroImage = 'https://images.unsplash.com/photo-1517849845537-4d257902454a?auto=format&fit=crop&w=1200&q=85';
 
 export default function HeroBanner() {
   return (
@@ -41,19 +42,11 @@ export default function HeroBanner() {
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.6, delay: 0.1 }}
         >
-          <div className="absolute -left-6 top-8 hidden rounded-[28px] bg-white/90 px-5 py-4 shadow-xl md:block">
-            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">Admin managed</p>
-            <p className="mt-1 text-2xl font-black text-brand-navy">Live data</p>
-          </div>
           <img
             src={heroImage}
-            alt="Happy family with an adopted pet"
+            alt="Golden retriever smiling outdoors"
             className="h-[420px] w-full rounded-[34px] object-cover shadow-2xl ring-1 ring-white/80"
           />
-          <div className="absolute -bottom-6 right-4 rounded-[28px] bg-white px-5 py-4 shadow-xl ring-1 ring-black/5">
-            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">Photo uploads</p>
-            <p className="mt-1 text-lg font-black text-brand-navy">Pets, users, stories</p>
-          </div>
         </motion.div>
       </div>
     </section>

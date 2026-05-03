@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Adoption;
 use App\Models\Pet;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -22,9 +23,35 @@ class PetController extends Controller
         return '/storage/' . $request->file('photo')->store('pets', 'public');
     }
 
+    private function adoptedPetIds(): array
+    {
+        return Adoption::query()
+            ->join('applications', 'adoptions.app_id', '=', 'applications.app_id')
+            ->pluck('applications.pet_id')
+            ->map(fn ($id) => (int) $id)
+            ->unique()
+            ->values()
+            ->all();
+    }
+
+    private function applyCalculatedAdoptionStatus($pets)
+    {
+        $adoptedIds = $this->adoptedPetIds();
+
+        return $pets->map(function (Pet $pet) use ($adoptedIds) {
+            if (in_array((int) $pet->pet_id, $adoptedIds, true)) {
+                $pet->setAttribute('adopt_status', 'Adopted');
+            }
+
+            return $pet;
+        });
+    }
+
     public function index()
     {
-        return response()->json(Pet::orderBy('pet_id', 'desc')->get(), 200);
+        $pets = Pet::orderBy('pet_id', 'desc')->get();
+
+        return response()->json($this->applyCalculatedAdoptionStatus($pets), 200);
     }
 
     public function store(Request $request)
@@ -62,6 +89,15 @@ class PetController extends Controller
             return response()->json(['message' => 'Pet not found'], 404);
         }
 
+        $isAdopted = Adoption::query()
+            ->join('applications', 'adoptions.app_id', '=', 'applications.app_id')
+            ->where('applications.pet_id', $pet->pet_id)
+            ->exists();
+
+        if ($isAdopted) {
+            $pet->setAttribute('adopt_status', 'Adopted');
+        }
+
         return response()->json($pet, 200);
     }
 
@@ -94,7 +130,7 @@ class PetController extends Controller
 
         return response()->json([
             'message' => 'Pet updated successfully',
-            'data' => $pet,
+            'data' => $pet->refresh(),
         ], 200);
     }
 

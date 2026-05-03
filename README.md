@@ -81,7 +81,7 @@ This project focuses on:
 
 ### Schema Diagram
 
-![Schema Diagram](docs/images/schema-diagram.drawio.png)
+![Schema Diagram](docs/images/normalized-schema-diagram.drawio.png)
 
 ### NORMALIZED Schema Diagram
 

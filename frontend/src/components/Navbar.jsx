@@ -80,7 +80,7 @@ export default function Navbar() {
                     <p className="text-sm text-slate-500">{user.email}</p>
                   </div>
                   <Link
-                    to="/login"
+                    to="/profile"
                     className="mt-2 block rounded-2xl px-4 py-3 font-medium text-slate-700 transition hover:bg-rose-50 hover:text-brand-pink"
                     onClick={() => setMenuOpen(false)}
                   >
@@ -144,16 +144,21 @@ export default function Navbar() {
                   Login
                 </Link>
               ) : (
-                <button
-                  type="button"
-                  className="btn-secondary w-full"
-                  onClick={() => {
-                    logout();
-                    setMobileOpen(false);
-                  }}
-                >
-                  Logout {user.name}
-                </button>
+                <div className="space-y-3">
+                  <Link to="/profile" className="btn-secondary w-full" onClick={() => setMobileOpen(false)}>
+                    Profile
+                  </Link>
+                  <button
+                    type="button"
+                    className="btn-secondary w-full"
+                    onClick={() => {
+                      logout();
+                      setMobileOpen(false);
+                    }}
+                  >
+                    Logout {user.name}
+                  </button>
+                </div>
               )}
             </div>
           </div>

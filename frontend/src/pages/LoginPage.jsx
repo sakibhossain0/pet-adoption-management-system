@@ -37,13 +37,7 @@ export default function LoginPage() {
     <div className="section-shell py-12">
       <div className="mx-auto max-w-5xl rounded-[38px] bg-white p-8 shadow-card ring-1 ring-black/5 lg:p-10">
         <div className="grid gap-10 lg:grid-cols-[0.95fr_1.05fr]">
-          <div className="rounded-[30px] bg-gradient-to-br from-brand-pink via-brand-coral to-brand-yellow p-8 text-white">
-            <p className="text-sm font-bold uppercase tracking-[0.2em] text-white/80">Welcome back</p>
-            <h1 className="mt-4 text-4xl font-black">One login page for everyone.</h1>
-            <p className="mt-5 leading-8 text-white/85">
-              Regular users can browse and apply. Admin users are recognized by their saved admin account and are sent to the dashboard.
-            </p>
-          </div>
+
           <div>
             <SectionHeader
               eyebrow="Login"

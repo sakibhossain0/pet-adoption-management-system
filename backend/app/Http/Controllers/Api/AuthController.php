@@ -6,14 +6,20 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller
 {
-    private function storePhoto(Request $request): ?string
+    private function storePhoto(Request $request, ?string $oldPath = null): ?string
     {
         if (!$request->hasFile('photo')) {
-            return null;
+            return $oldPath;
+        }
+
+        if ($oldPath) {
+            Storage::disk('public')->delete(str_replace('/storage/', '', $oldPath));
         }
 
         $path = $request->file('photo')->store('users', 'public');
@@ -141,6 +147,46 @@ class AuthController extends Controller
     public function me(Request $request)
     {
         return response()->json($request->user());
+    }
+
+
+    public function updateProfile(Request $request)
+    {
+        $user = $request->user();
+
+        $data = $request->validate([
+            'name' => 'required|string|max:100',
+            'phone' => 'nullable|string|max:20',
+            'email' => [
+                'required',
+                'email',
+                'max:150',
+                Rule::unique('users', 'email')->ignore($user->uid, 'uid'),
+            ],
+            'password' => 'nullable|string|min:6',
+            'photo' => 'nullable|image|max:2048',
+            'lifestyle_type' => 'nullable|string|max:50',
+            'housing_type' => 'nullable|string|max:50',
+            'skill_level' => 'nullable|string|max:50',
+            'availability' => 'nullable|string|max:100',
+        ]);
+
+        if (!empty($data['password'])) {
+            $data['password'] = Hash::make($data['password']);
+        } else {
+            unset($data['password']);
+        }
+
+        $data['email'] = strtolower(trim($data['email']));
+        $data['photo_url'] = $this->storePhoto($request, $user->photo_url);
+        unset($data['photo']);
+
+        $user->update($data);
+
+        return response()->json([
+            'message' => 'Profile updated successfully',
+            'user' => $user->refresh(),
+        ], 200);
     }
 
     public function logout(Request $request)

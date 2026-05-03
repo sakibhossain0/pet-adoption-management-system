@@ -8,6 +8,7 @@ export function statusBadgeClass(status = '') {
   if (value === 'available') return 'bg-emerald-100 text-emerald-700';
   if (value === 'pending') return 'bg-amber-100 text-amber-700';
   if (value === 'fostered') return 'bg-sky-100 text-sky-700';
+  if (value === 'adopted') return 'bg-violet-100 text-violet-700';
   return 'bg-slate-100 text-slate-700';
 }
 

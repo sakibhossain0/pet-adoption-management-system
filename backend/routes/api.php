@@ -18,6 +18,8 @@ use App\Http\Controllers\Api\ActivityLogController;
 Route::post('register', [AuthController::class, 'register']);
 Route::post('login', [AuthController::class, 'login']);
 Route::middleware('auth:sanctum')->get('me', [AuthController::class, 'me']);
+Route::middleware('auth:sanctum')->put('me', [AuthController::class, 'updateProfile']);
+Route::middleware('auth:sanctum')->post('me', [AuthController::class, 'updateProfile']);
 Route::middleware('auth:sanctum')->post('logout', [AuthController::class, 'logout']);
 Route::middleware('auth:sanctum')->get('my-adoptions', [AdoptionController::class, 'myAdoptions']);
 

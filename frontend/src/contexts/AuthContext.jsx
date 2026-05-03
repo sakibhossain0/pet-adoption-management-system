@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useMemo, useState } from 'react';
 import apiClient from '../services/apiClient';
+import { formDataFromObject } from '../services/contentService';
 
 const AuthContext = createContext(null);
 
@@ -10,6 +11,10 @@ function readSavedUser() {
   } catch {
     return null;
   }
+}
+
+function hasFile(payload) {
+  return Object.values(payload || {}).some((value) => value instanceof File);
 }
 
 export function AuthProvider({ children }) {
@@ -30,6 +35,17 @@ export function AuthProvider({ children }) {
     } else {
       localStorage.removeItem('pawfect-token');
     }
+  }, [token]);
+
+  useEffect(() => {
+    if (!token) return;
+
+    apiClient.get('/me')
+      .then((response) => setUser(response.data))
+      .catch(() => {
+        setUser(null);
+        setToken(null);
+      });
   }, [token]);
 
   const value = useMemo(
@@ -53,6 +69,17 @@ export function AuthProvider({ children }) {
         const response = await apiClient.post('/register', formData);
         setUser(response.data.user);
         setToken(response.data.token);
+        return response.data.user;
+      },
+      async refreshUser() {
+        const response = await apiClient.get('/me');
+        setUser(response.data);
+        return response.data;
+      },
+      async updateProfile(payload) {
+        const body = hasFile(payload) ? formDataFromObject({ ...payload, _method: 'PUT' }) : payload;
+        const response = hasFile(payload) ? await apiClient.post('/me', body) : await apiClient.put('/me', body);
+        setUser(response.data.user);
         return response.data.user;
       },
       async logout() {

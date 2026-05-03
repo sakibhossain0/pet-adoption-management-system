@@ -15,6 +15,11 @@ class Application extends Model
         'submission_date',
         'uid',
         'pet_id',
+        'applicant_name',
+        'phone',
+        'email',
+        'housing_type',
+        'other_pets',
+        'daily_availability',
     ];
 }
-

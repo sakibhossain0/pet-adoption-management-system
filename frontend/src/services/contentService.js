@@ -22,8 +22,17 @@ function hasFile(payload) {
   return Object.values(payload || {}).some((value) => value instanceof File);
 }
 
+async function safeList(promise) {
+  try {
+    return await promise;
+  } catch {
+    return [];
+  }
+}
+
 export async function listResource(path) {
-  const response = await apiClient.get(path);
+  const separator = path.includes('?') ? '&' : '?';
+  const response = await apiClient.get(`${path}${separator}_=${Date.now()}`);
   return asArray(extractData(response));
 }
 
@@ -52,7 +61,7 @@ export async function getPets() {
 }
 
 export async function getPet(id) {
-  const response = await apiClient.get(`/pets/${id}`);
+  const response = await apiClient.get(`/pets/${id}?_=${Date.now()}`);
   return toPetView(extractData(response));
 }
 
@@ -70,6 +79,10 @@ export function getUsers() {
 
 export function getApplications() {
   return listResource('/applications');
+}
+
+export function getAdoptions() {
+  return listResource('/adoptions');
 }
 
 export function getMyAdoptions() {
@@ -104,25 +117,27 @@ export async function submitApplication(payload) {
 }
 
 export async function getDashboardData() {
-  const [pets, shelters, fosterParents, medicalRecords, users, applications, stories, activityLogs] = await Promise.all([
-    getPets(),
-    getShelters(),
-    getFosterParents(),
-    getMedicalRecords(),
-    getUsers(),
-    getApplications(),
-    getSuccessStories(),
-    getActivityLogs(),
+  const [pets, shelters, fosterParents, medicalRecords, users, applications, stories, activityLogs, adoptions] = await Promise.all([
+    safeList(getPets()),
+    safeList(getShelters()),
+    safeList(getFosterParents()),
+    safeList(getMedicalRecords()),
+    safeList(getUsers()),
+    safeList(getApplications()),
+    safeList(getSuccessStories()),
+    safeList(getActivityLogs()),
+    safeList(getAdoptions()),
   ]);
 
   const availablePets = pets.filter((pet) => String(pet.adopt_status).toLowerCase() === 'available').length;
+  const pendingApplications = applications.filter((application) => String(application.status).toLowerCase() === 'pending').length;
 
   return {
     stats: [
       { label: 'Total Pets', value: pets.length },
       { label: 'Available Pets', value: availablePets },
-      { label: 'Users', value: users.length },
-      { label: 'Applications', value: applications.length },
+      { label: 'Pending Applications', value: pendingApplications },
+      { label: 'Total Adoptions', value: adoptions.length },
     ],
     pets,
     shelters,
@@ -132,5 +147,6 @@ export async function getDashboardData() {
     applications,
     stories,
     activityLogs,
+    adoptions,
   };
 }
