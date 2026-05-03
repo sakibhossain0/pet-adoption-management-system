@@ -23,7 +23,7 @@ The **Pet Adoption Management System** is a full-stack web application built for
 
 ## Report
 
-![Report](docs/report/CSE370_Lab_ProjectReport_Template.pdf)
+[View Project Report](docs/reports/CSE370_Lab_ProjectReport_Template.pdf)
 
 ## ✨ Features
 
